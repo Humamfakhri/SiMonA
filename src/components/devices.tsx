@@ -1,5 +1,4 @@
 "use client"
-import { M2MDevices } from '@/types/antares-type';
 import { useEffect, useState } from 'react';
 import { useDeviceStore } from "@/stores/deviceStore";
 

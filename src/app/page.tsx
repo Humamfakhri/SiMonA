@@ -8,38 +8,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from '@/components/ui/input';
 import { Fish, Leaf, Ruler, Waves } from "lucide-react";
-import LineChart from '@/components/LineChart';
-import { fetchAntaresData } from '@/utils/fetchAntaresData';
-import { M2MDevices, M2MResponse } from "@/types/antares-type";
-import LineChartHome from "@/components/line-chart";
-import Devices from "@/components/devices";
 import DetailKolam from "@/components/detail-kolam";
+import Devices from "@/components/devices";
 
 export default async function Home() {
-  // const fetchAllDevice = async () => {
-  //   // setLoading(true);
-  //   try {
-  //     const response = await fetch(`/api/antares/fetchAllDevice`);
-  //     if (!response.ok) {
-  //       throw new Error('Data fetch failed');
-  //     }
-
-  //     // Parsing data dengan tipe yang sesuai
-  //     const result: M2MDevices = await response.json();
-  //     return result;
-  //     // Set state jika ada list data
-  //     // setData(result["m2m:uril"] || []);
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //   } finally {
-  //     // setLoading(false);
-  //   }
-  // };
-
-  // const allDevice = await fetchAllDevice();
-  // console.log("all Device", allDevice);
-
-
 
   return (
     <>
@@ -78,8 +50,7 @@ export default async function Home() {
         <CardBeranda icon={Ruler} iconClassName="rotate-45" description="Tinggi Tanaman" content="7cm" className="bg-green-100 text-green-600" /> */}
         </div>
         <DetailKolam />
-        <h1 className="text-2xl font-bold mb-4 mt-5">IoT Data Charts</h1>
-        <Devices />
+        <Devices/>
       </div>
     </>
   );

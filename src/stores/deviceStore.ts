@@ -1,4 +1,4 @@
-import { M2MCin, M2MList } from "@/types/antares-type";
+import { M2MCin } from "@/types/antares-type";
 import { create } from "zustand";
 
 interface DeviceState {

@@ -1,8 +1,21 @@
 "use client"
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+  } from "chart.js";
+  import { Bar } from "react-chartjs-2";
+import { format, parse } from 'date-fns';
 import { useDeviceStore, useKolamStore } from '@/stores/deviceStore';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
 import { useState, useEffect } from 'react';
-import { log } from 'console';
+
+// Registrasi komponen yang diperlukan
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function DetailKolam() {
     const { devices, isLoadingDevices } = useDeviceStore();
@@ -11,30 +24,42 @@ export default function DetailKolam() {
     const [isActive, setIsActive] = useState(1)
     const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
 
-    // Handle device selection
-    const handleDeviceSelect = (device: string) => {
-        setSelectedDevice(device);
-    };
-
-
     useEffect(() => {
-        // const baseUrl = "https://antares.api/device"; // Contoh URL base API
         const baseUrl = "api/antares/fetchAllDataOfDevice"; // Contoh URL base API
 
+        // const fetchDataForDevice = async (deviceName: string) => {
+        //     try {
+        //         const response = await fetch(`${baseUrl}?device=${deviceName}`);
+        //         if (!response.ok) {
+        //             console.error(`Error fetching device ${deviceName}`);
+        //             return;
+        //         }
+        //         const result = await response.json();
+        //         const data = result["m2m:list"]?.map((item: any) => item["m2m:cin"]) || [];
+        //         setDeviceData(deviceName, data);
+        //     } catch (error) {
+        //         console.error(`Failed to fetch device data: ${error}`);
+        //     }
+        // };
+
         const fetchDataForDevice = async (deviceName: string) => {
+            // console.log(`Fetching data for device: ${deviceName}`); // Tambahkan log
             try {
                 const response = await fetch(`${baseUrl}?device=${deviceName}`);
                 if (!response.ok) {
-                    console.error(`Error fetching device ${deviceName}`);
+                    console.error(`Error fetching device ${deviceName}: ${response.status}`);
                     return;
                 }
                 const result = await response.json();
                 const data = result["m2m:list"]?.map((item: any) => item["m2m:cin"]) || [];
+                // console.log(`Data for ${deviceName}:`, data);
                 setDeviceData(deviceName, data);
             } catch (error) {
                 console.error(`Failed to fetch device data: ${error}`);
             }
         };
+
+
 
         if (!isLoadingDevices && devices && !isDataFetched) {
             devices.forEach((deviceName) => {
@@ -44,6 +69,13 @@ export default function DetailKolam() {
             setIsDataFetched(true); // Avoid repeated fetch calls
         }
     }, [devices, isLoadingDevices, setDeviceData, isDataFetched]);
+
+    // useEffect(() => {
+    //     console.log("Devices ", devices);
+    //     console.log("deviceData ", deviceData);
+
+    // }, [devices, deviceData])
+
 
     return (
         <Card className="border-0 mt-5 py-5">
@@ -72,9 +104,43 @@ export default function DetailKolam() {
                                 .map((device, index) => (
                                     <div key={index}>
                                         <h2>Device: {device.name}</h2>
-                                        <pre>{JSON.stringify(device.data, null, 2)}</pre>
+                                        {/* LIMIT JADI 3 AJA */}
+                                        {device.data.slice(0, 3).map((item, index) => {
+                                            const parsedData = JSON.parse(item.con);
+                                            const data = {
+                                                labels: Object.keys(parsedData),
+                                                datasets: [
+                                                  {
+                                                    label: "Sensor Data",
+                                                    data: Object.values(parsedData),
+                                                    backgroundColor: "rgba(75, 192, 192, 0.2)",
+                                                    borderColor: "rgba(75, 192, 192, 1)",
+                                                    borderWidth: 1,
+                                                  },
+                                                ],
+                                              };
+                                            let formattedDate = 'Invalid Date';
+                                            try {
+                                                const date = parse(item.ct, "yyyyMMdd'T'HHmmss", new Date());
+                                                formattedDate = format(date, 'dd-MM-yyyy HH:mm:ss');
+                                            } catch (error) {
+                                                console.error("Date parsing error:", error);
+                                            }
+                                            return (
+                                                <div key={index} className="mb-4">
+                                                    {Object.entries(parsedData).map(([key, value]) => (
+                                                        <p key={key}>
+                                                            <strong>{formattedDate}</strong>{' '}
+                                                            <strong>{key}:</strong> {String(value)}
+                                                        </p>
+                                                    ))}
+                                                    <Bar data={data} />
+                                                </div>
+                                            );
+                                        })}
                                     </div>
-                                ))}
+                                ))
+                            }
                         </div>
                     )}
                 </div>
