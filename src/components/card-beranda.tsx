@@ -1,40 +1,54 @@
+"use client"
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
+import { useDeviceStore } from "@/stores/deviceStore";
 import clsx from "clsx";
-import { LucideIcon, LucideProps, Warehouse } from "lucide-react"
-import { ForwardRefExoticComponent, RefAttributes } from "react"
+import { Loader2 } from "lucide-react";
 
 type CardBerandaProps = {
-  icon: LucideIcon,
-  description: string,
-  content: string | number,
+  icon: JSX.Element;
+  description: string;
+  content: string | number;
   className?: string;
   iconClassName?: string;
-}
+};
 
-export default function CardBeranda({icon: Icon, description, content, className, iconClassName}: CardBerandaProps) {
+export default function CardBeranda({
+  icon,
+  description,
+  content,
+  className,
+  iconClassName,
+}: CardBerandaProps) {
+  const { devices, isLoadingDevices } = useDeviceStore();  
+
   return (
     <Card className="border-0">
       <CardHeader>
         <CardTitle>
-        <div className={clsx("flexCenter p-2 rounded w-fit", className)}>
-            <Icon size={15} strokeWidth={2} className={iconClassName}/>
+          <div className={clsx("flexCenter p-2 rounded w-fit", className)}>
+            <div className={iconClassName}>{icon}</div>
           </div>
         </CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className="pt-3">{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="font-bold">{content}</p>
+        {isLoadingDevices && description === "Kolam Ikan" ? (
+          <div className="flex items-center">
+            <Loader2 className="animate-spin h-5 w-5 text-gray-500" />
+            {/* <p className="ml-2 text-sm text-gray-500">Loading...</p> */}
+          </div>
+        ) : (
+          <p className="font-bold text-lg">
+            {description === "Kolam Ikan" ? devices.length : content}
+          </p>
+        )}
       </CardContent>
-      {/* <CardFooter>
-            <p>Card Footer</p>
-          </CardFooter> */}
     </Card>
-  )
+  );
 }

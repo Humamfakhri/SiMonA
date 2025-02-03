@@ -1,62 +1,54 @@
 "use client"
 import { M2MDevices } from '@/types/antares-type';
 import { useEffect, useState } from 'react';
+import { useDeviceStore } from "@/stores/deviceStore";
+
 
 interface DevicesProps {
   countDevices?: (value: number) => void;
 }
 
 export default function Devices({ countDevices }: DevicesProps) {
-  const [loading, setLoading] = useState(false);
+  const { isLoadingDevices, setLoadingDevices } = useDeviceStore();
+  const { devices, setDevices } = useDeviceStore();
   const [data, setData] = useState<String[]>([]);
-  const [devices, setDevices] = useState<String[]>([]);
 
-  const fetchAllDataOfDevice = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/antares/fetchAllDevice`);
-      if (!response.ok) {
-        throw new Error('Data fetch failed');
+  useEffect(() => {
+    const fetchDevices = async () => {
+      setLoadingDevices(true);
+      try {
+        const response = await fetch("/api/antares/fetchAllDevice");
+        const result = await response.json();
+        setDevices(result["m2m:uril"] || []);
+      } catch (error) {
+        console.error("Failed to fetch devices", error);
+      } finally {
+        setLoadingDevices(false);
       }
-
-      // Parsing data dengan tipe yang sesuai
-      const result: M2MDevices = await response.json();
-
-      // Set state jika ada list data
-      setData(result["m2m:uril"] || []);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    fetchDevices();
+  }, [setDevices, setLoadingDevices]);
 
   const parseDeviceList = (data: String[]) => {
     const parsedDevice = data.map((item) => item.split("SiMonA/")[1]);
-    setDevices(parsedDevice);
+    setData(parsedDevice);
   };
 
   useEffect(() => {
-    fetchAllDataOfDevice()
-  }, [])
-
-  useEffect(() => {
-    if (data) {
-      const parsedDeviceList = parseDeviceList(data);
-      // countDevices(data.length.toString())
+    if (devices) {
+      const parsedDeviceList = parseDeviceList(devices);
       console.log(parsedDeviceList);
     }
-  }, [data])
-
+  }, [devices])
 
   return (
     <div>
-      {loading ? (
+      {isLoadingDevices ? (
         <p>Memuat perangkat ...</p>
       ) : (
         <>
           <ul>
-            {devices.map((item, index) => (
+            {data.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
