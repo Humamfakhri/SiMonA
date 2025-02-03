@@ -20,7 +20,7 @@
     --primary: 210 78% 46%;
     /* --primary: 198.63 88.66% 48.43%; */
     /* --primary: 221.2 83.2% 53.3%; */
-    --primary-foreground: 210 40% 98%;
+    --primary-foreground: 204 94% 94%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
@@ -93,4 +93,18 @@
   .flexCenter {
     @apply flex items-center justify-center
   }
+
+  .bg-primary-fg {
+    @apply bg-primary-foreground
+  }
+}
+
+.glassmorphism {
+  /* From https://css.glass */
+background: rgba(241, 245, 249, 0.7);
+/* border-radius: 16px; */
+/* box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); */
+backdrop-filter: blur(5px);
+-webkit-backdrop-filter: blur(5px);
+border: 1px solid rgba(241, 245, 249, 0.3);
 }

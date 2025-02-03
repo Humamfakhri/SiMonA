@@ -3,7 +3,8 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Input } from '@/components/ui/input';
 import { Fish, Leaf, Ruler, Waves } from "lucide-react";
@@ -12,6 +13,7 @@ import { fetchAntaresData } from '@/utils/fetchAntaresData';
 import { M2MDevices, M2MResponse } from "@/types/antares-type";
 import LineChartHome from "@/components/line-chart";
 import Devices from "@/components/devices";
+import DetailKolam from "@/components/detail-kolam";
 
 export default async function Home() {
   // const fetchAllDevice = async () => {
@@ -41,39 +43,44 @@ export default async function Home() {
 
   return (
     <>
-      <Input placeholder="Cari" className="border-0 shadow-sm mb-5" />
-      <div className="grid grid-cols-4 gap-4">
-        {/* <CardBeranda icon={Waves} description="Kolam Ikan" content={"2"} className="bg-sky-100 text-primary" /> */}
-        <CardBeranda
-          icon={<Waves />}
-          description="Kolam Ikan"
-          content={"2"}
-          className="bg-sky-100 text-primary"
-        />
-        <CardBeranda
-          icon={<Fish />}
-          description="Ikan"
-          content={"15"}
-          className="bg-fuchsia-100 text-fuchsia-600"
-        />
-        <CardBeranda
-          icon={<Leaf />}
-          description="Tanaman"
-          content={"20"}
-          className="bg-green-100 text-green-600"
-        />
-        <CardBeranda
-          icon={<Ruler />}
-          description="Tinggi Tanaman"
-          content={"7cm"}
-          className="bg-green-100 text-green-600"
-        />
-        {/* <CardBeranda icon={Fish} description="Ikan" content="15" className="bg-fuchsia-100 text-fuchsia-600" />
+      <div className="sticky top-0 glassmorphism px-5 py-5 z-10">
+        <Input placeholder="Cari" className="border-0 shadow-sm" />
+      </div>
+      <div className="main-content px-5">
+        <div className="grid grid-cols-4 gap-4">
+          {/* <CardBeranda icon={Waves} description="Kolam Ikan" content={"2"} className="bg-sky-100 text-primary" /> */}
+          <CardBeranda
+            icon={<Waves />}
+            description="Kolam Ikan"
+            content={"2"}
+            className="bg-sky-100 text-primary"
+          />
+          <CardBeranda
+            icon={<Fish />}
+            description="Ikan"
+            content={"15"}
+            className="bg-fuchsia-100 text-fuchsia-600"
+          />
+          <CardBeranda
+            icon={<Leaf />}
+            description="Tanaman"
+            content={"20"}
+            className="bg-green-100 text-green-600"
+          />
+          <CardBeranda
+            icon={<Ruler className="rotate-45" />}
+            description="Tinggi Tanaman ±"
+            content={"7cm"}
+            className="bg-green-100 text-green-600"
+          />
+          {/* <CardBeranda icon={Fish} description="Ikan" content="15" className="bg-fuchsia-100 text-fuchsia-600" />
         <CardBeranda icon={Leaf} description="Tanaman" content="20" className="bg-green-100 text-green-600" />
         <CardBeranda icon={Ruler} iconClassName="rotate-45" description="Tinggi Tanaman" content="7cm" className="bg-green-100 text-green-600" /> */}
+        </div>
+        <DetailKolam />
+        <h1 className="text-2xl font-bold mb-4 mt-5">IoT Data Charts</h1>
+        <Devices />
       </div>
-      <h1 className="text-2xl font-bold mb-4">IoT Data Charts</h1>
-      <Devices />
     </>
   );
 }

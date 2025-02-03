@@ -28,7 +28,7 @@ export default function CardBeranda({
   const { devices, isLoadingDevices } = useDeviceStore();  
 
   return (
-    <Card className="border-0">
+    <Card className="border-0 py-1">
       <CardHeader>
         <CardTitle>
           <div className={clsx("flexCenter p-2 rounded w-fit", className)}>

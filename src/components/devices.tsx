@@ -19,7 +19,9 @@ export default function Devices({ countDevices }: DevicesProps) {
       try {
         const response = await fetch("/api/antares/fetchAllDevice");
         const result = await response.json();
-        setDevices(result["m2m:uril"] || []);
+        const data:String[] = result["m2m:uril"] || [];
+        const parsedDevice = data.map((item) => item.split("SiMonA/")[1]) 
+        setDevices(parsedDevice);
       } catch (error) {
         console.error("Failed to fetch devices", error);
       } finally {
@@ -29,18 +31,6 @@ export default function Devices({ countDevices }: DevicesProps) {
     fetchDevices();
   }, [setDevices, setLoadingDevices]);
 
-  const parseDeviceList = (data: String[]) => {
-    const parsedDevice = data.map((item) => item.split("SiMonA/")[1]);
-    setData(parsedDevice);
-  };
-
-  useEffect(() => {
-    if (devices) {
-      const parsedDeviceList = parseDeviceList(devices);
-      console.log(parsedDeviceList);
-    }
-  }, [devices])
-
   return (
     <div>
       {isLoadingDevices ? (
@@ -48,7 +38,7 @@ export default function Devices({ countDevices }: DevicesProps) {
       ) : (
         <>
           <ul>
-            {data.map((item, index) => (
+            {devices.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
