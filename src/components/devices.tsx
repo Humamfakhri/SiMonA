@@ -30,19 +30,19 @@ export default function Devices({ countDevices }: DevicesProps) {
     fetchDevices();
   }, [setDevices, setLoadingDevices]);
 
-  return (
-    <div>
-      {isLoadingDevices ? (
-        <p>Memuat perangkat ...</p>
-      ) : (
-        <>
-          <ul>
-            {devices.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </>
-      )}
-    </div>
-  )
+  // return (
+  //   <div>
+  //     {isLoadingDevices ? (
+  //       <p>Memuat perangkat ...</p>
+  //     ) : (
+  //       <>
+  //         <ul>
+  //           {devices.map((item, index) => (
+  //             <li key={index}>{item}</li>
+  //           ))}
+  //         </ul>
+  //       </>
+  //     )}
+  //   </div>
+  // )
 }

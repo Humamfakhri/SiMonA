@@ -25,10 +25,10 @@ export interface M2MCin {
 
 // src/types/sensor.ts
 export interface SensorData {
-  "tds": string;
-  "ph": string;
-  "temperature": string;
+  tds: string;
+  ph: string;
+  temperature: string;
   "water-level": string;
-  "atemperature": string;
-  "ahumidity": string;
+  atemperature: string;
+  ahumidity: string;
 }
