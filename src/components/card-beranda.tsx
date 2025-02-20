@@ -25,7 +25,7 @@ export default function CardBeranda({
   className,
   iconClassName,
 }: CardBerandaProps) {
-  const { devices, isLoadingDevices } = useDeviceStore();  
+  const { devices, isLoadingDevices } = useDeviceStore();
 
   return (
     <Card className="border-0 py-1">
@@ -38,15 +38,17 @@ export default function CardBeranda({
         <CardDescription className="pt-3">{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoadingDevices && description === "Kolam Ikan" ? (
-          <div className="flex items-center">
-            <Loader2 className="animate-spin h-5 w-5 text-gray-500" />
-            {/* <p className="ml-2 text-sm text-gray-500">Loading...</p> */}
+        {isLoadingDevices ? (
+        // {isLoadingDevices && description === "Kolam Ikan" ? (
+          <div className="animate-pulse duration-800 space-y-2">
+            <div className="h-5 bg-gray-300 rounded w-8"></div>
           </div>
         ) : (
-          <p className="font-bold text-lg">
-            {description === "Kolam Ikan" ? devices.length : content}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="font-bold text-lg">
+              {description === "Kolam Ikan" ? devices.length : content}
+            </p>
+          </div>
         )}
       </CardContent>
     </Card>
