@@ -25,6 +25,7 @@ export interface M2MCin {
 
 // src/types/sensor.ts
 export interface SensorData {
+  day: string;
   tds: string;
   ph: string;
   temperature: string;

@@ -17,7 +17,7 @@ import { useDeviceStore, useKolamStore } from '@/stores/deviceStore';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card'
 import { useState, useEffect } from 'react';
 import { M2MCin, SensorData } from "@/types/antares-type";
-import { Droplet, Wind } from "lucide-react";
+import { Droplet, Wind, Check, CircleChevronRight, CircleChevronLeft } from 'lucide-react';
 
 // Registrasi komponen yang diperlukan
 // ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -182,12 +182,15 @@ export default function DetailKolam() {
                                     // Ambil dan proses data sensor
                                     const sensorData: SensorData[] = device.data.slice(0, 30).map(item => ({
                                         ...JSON.parse(item.con),
-                                        timestamp: format(parse(item.ct, "yyyyMMdd'T'HHmmss", new Date()), 'dd-MM-yyyy HH:mm:ss')
+                                        timestamp: format(parse(item.ct, "yyyyMMdd'T'HHmmss", new Date()), 'dd-MM-yyyy HH:mm:ss'),
+                                        day: format(parse(item.ct, "yyyyMMdd'T'HHmmss", new Date()), 'dd-MM'),
+                                        hour: format(parse(item.ct, "yyyyMMdd'T'HHmmss", new Date()), 'HH:mm')
                                     }));
 
-                                    sensorData.map(data => {
-                                        console.log(data.ph);
+                                    const uniqueDays: string[] = Array.from(new Set(sensorData.map(data => data.day)));
 
+                                    uniqueDays.map(data => {
+                                        console.log(data);
                                     })
 
                                     // tds
@@ -220,12 +223,26 @@ export default function DetailKolam() {
                                                             <p className="text-gray-700">{minTds < 0 ? ("(-" + minTds + ")") : minTds} - {maxTds}</p>
                                                         </div>
                                                     </div>
+                                                    <div className="flex my-5 ms-6 gap-4 items-center">
+                                                        <Droplet size={35} color={"gray"} className="invisible" />
+                                                        <div className="flex-col w-full">
+                                                            <div>
+                                                                {uniqueDays.map((day, index) => (
+                                                                    <button type='button' className="text-sm bg-primary-fg text-primary font-bold px-4 py-1 rounded-full" key={index}>{day}</button>
+                                                                ))}
+                                                            </div>
+                                                            <div className="flex justify-end gap-3">
+                                                                <CircleChevronLeft size={30} strokeWidth={1.5} className="text-primary" />
+                                                                <CircleChevronRight size={30} strokeWidth={1.5} className="text-gray-300" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div className="h-96">
                                                         <ResponsiveContainer>
                                                             <LineChart data={sensorData}>
                                                                 <CartesianGrid strokeDasharray="3 3" />
-                                                                <XAxis dataKey="timestamp" />
-                                                                <YAxis domain={[(minTds >= 10 ? (minTds - 10) : (minTds)), (maxTds + 10)]} />
+                                                                <XAxis dataKey="hour" className="text-xs" interval={1} tickMargin={15} />
+                                                                <YAxis domain={[(minTds >= 10 ? (minTds - 10) : (minTds)), (maxTds + 10)]} className="text-sm" tickMargin={5} />
                                                                 <Tooltip />
                                                                 {/* <Legend /> */}
                                                                 <Line type="monotone" dataKey="tds" stroke="#1A75D1" name="TDS" />
@@ -245,8 +262,8 @@ export default function DetailKolam() {
                                                         <ResponsiveContainer>
                                                             <LineChart data={sensorData}>
                                                                 <CartesianGrid strokeDasharray="3 3" />
-                                                                <XAxis dataKey="timestamp" />
-                                                                <YAxis domain={[(minPh >= 1 ? (minPh - 1) : (minPh)), (maxPh + 1)]} />
+                                                                <XAxis dataKey="hour" className="text-xs" interval={1} tickMargin={15} />
+                                                                <YAxis domain={[(minPh >= 1 ? (minPh - 1) : (minPh)), (maxPh + 1)]} className="text-sm" tickMargin={5} />
                                                                 <Tooltip />
                                                                 {/* <Legend /> */}
                                                                 <Line type="monotone" dataKey="ph" stroke="#1A75D1" name="pH" />
@@ -266,8 +283,8 @@ export default function DetailKolam() {
                                                         <ResponsiveContainer>
                                                             <LineChart data={sensorData}>
                                                                 <CartesianGrid strokeDasharray="3 3" />
-                                                                <XAxis dataKey="timestamp" />
-                                                                <YAxis domain={[(minWater_Level >= 1 ? (minWater_Level - 1) : (minWater_Level)), (maxWater_Level + 1)]} />
+                                                                <XAxis dataKey="hour" className="text-xs" interval={1} tickMargin={15} />
+                                                                <YAxis domain={[(minWater_Level >= 1 ? (minWater_Level - 1) : (minWater_Level)), (maxWater_Level + 1)]} className="text-sm" tickMargin={5} />
                                                                 <Tooltip />
                                                                 {/* <Legend /> */}
                                                                 <Line type="monotone" dataKey="water-level" stroke="#1A75D1" name="Water Level" />
@@ -287,8 +304,8 @@ export default function DetailKolam() {
                                                         <ResponsiveContainer>
                                                             <LineChart data={sensorData}>
                                                                 <CartesianGrid strokeDasharray="3 3" />
-                                                                <XAxis dataKey="timestamp" />
-                                                                <YAxis domain={[(minTemperature >= 5 ? (minTemperature - 5) : (minTemperature)), (maxTemperature + 5)]} />
+                                                                <XAxis dataKey="hour" className="text-xs" interval={1} tickMargin={15} />
+                                                                <YAxis domain={[(minTemperature >= 5 ? (minTemperature - 5) : (minTemperature)), (maxTemperature + 5)]} className="text-sm" tickMargin={5} />
                                                                 <Tooltip />
                                                                 {/* <Legend /> */}
                                                                 <Line type="monotone" dataKey="temperature" stroke="#1A75D1" name="Temperature" />
@@ -308,8 +325,8 @@ export default function DetailKolam() {
                                                         <ResponsiveContainer>
                                                             <LineChart data={sensorData}>
                                                                 <CartesianGrid strokeDasharray="3 3" />
-                                                                <XAxis dataKey="timestamp" />
-                                                                <YAxis domain={[(minAtemperature >= 1 ? (minAtemperature - 1) : (minAtemperature)), (maxAtemperature + 1)]} />
+                                                                <XAxis dataKey="hour" className="text-xs" interval={1} tickMargin={15} />
+                                                                <YAxis domain={[(minAtemperature >= 1 ? (minAtemperature - 1) : (minAtemperature)), (maxAtemperature + 1)]} className="text-sm" tickMargin={5} />
                                                                 <Tooltip />
                                                                 {/* <Legend /> */}
                                                                 <Line type="monotone" dataKey="atemperature" stroke="#1A75D1" name="Air Temperature" />
@@ -330,8 +347,8 @@ export default function DetailKolam() {
                                                         <ResponsiveContainer>
                                                             <LineChart data={sensorData}>
                                                                 <CartesianGrid strokeDasharray="3 3" />
-                                                                <XAxis dataKey="timestamp" />
-                                                                <YAxis domain={[(minAhumidity >= 1 ? (minAhumidity - 1) : (minAhumidity)), (maxAhumidity + 1)]} />
+                                                                <XAxis dataKey="hour" className="text-xs" interval={1} tickMargin={15} />
+                                                                <YAxis domain={[(minAhumidity >= 1 ? (minAhumidity - 1) : (minAhumidity)), (maxAhumidity + 1)]} className="text-sm" tickMargin={5} />
                                                                 <Tooltip />
                                                                 {/* <Legend /> */}
                                                                 <Line type="monotone" dataKey="ahumidity" stroke="#1A75D1" name="Air Humidity" />
