@@ -25,6 +25,7 @@ export interface M2MCin {
 
 // src/types/sensor.ts
 export interface SensorData {
+  hour: string;
   day: string;
   tds: string;
   ph: string;
@@ -32,4 +33,5 @@ export interface SensorData {
   "water-level": string;
   atemperature: string;
   ahumidity: string;
+  timestamp: string;
 }
