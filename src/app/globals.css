@@ -109,6 +109,17 @@ backdrop-filter: blur(5px);
 border: 1px solid rgba(241, 245, 249, 0.3);
 }
 
+.glassmorphism-login {
+  background: linear-gradient(360deg, rgba(255,255,255,0.8) 77%, rgba(193,239,251,0.8) 100%);
+  /* background: rgba(255, 255, 255, 0.4); */
+  border-radius: 32px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6.6px);
+  -webkit-backdrop-filter: blur(6.6px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  /* border: 2px solid rgba(255, 255, 255, 0.75); */
+}
+
 .slideBgButton {
   position: relative;
   background: transparent;
@@ -129,4 +140,26 @@ border: 1px solid rgba(241, 245, 249, 0.3);
 
 .slideBgButton:hover::before {
   left: 0;
+}
+
+/* .login-bg {
+  background-image: url('../../public/images/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+} */
+
+.login-bg::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  z-index: -1;
+  background-image: url('../../public/images/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(2px);
+  opacity: 0.5;
 }

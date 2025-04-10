@@ -17,7 +17,7 @@ import { useDeviceStore, useKolamStore } from '@/stores/deviceStore';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card'
 import { useState, useEffect } from 'react';
 import { M2MCin, SensorData } from "@/types/antares-type";
-import { Droplet, Wind, Check, CircleChevronRight, CircleChevronLeft, ChevronsRight, ChevronsLeft, LoaderCircle } from 'lucide-react';
+import { Droplet, Wind, Check, CircleChevronRight, CircleChevronLeft, ChevronsRight, ChevronsLeft, LoaderCircle, TvMinimal, MapPin } from 'lucide-react';
 import MyTooltip from "./my-tooltip";
 
 // Registrasi komponen yang diperlukan
@@ -170,10 +170,10 @@ export default function DetailKolam() {
                 <LoaderCircle className="animate-spin size-12 rounded-full text-primary mx-auto p-0" />
             ) : (
                 <CardContent>
-                    <div className="sticky top-0 pt-11 pb-0 bg-white z-10">
+                    <div className="sticky top-0 pt-11 pb-0 z-10 bg-white">
                         {/* <div className="sticky top-0 pt-10 pb-5 bg-white z-10"> */}
-                        <div className="flex items-stretch justify-between">
-                            <div>
+                        <div className="flex flex-col justify-between gap-4 pb-1">
+                            <div className="flex items-stretch justify-between">
                                 <div className='flex items-center gap-3'>
                                     {devices.map((item, index) => {
                                         return (
@@ -181,13 +181,23 @@ export default function DetailKolam() {
                                         )
                                     })}
                                 </div>
-                                <CardDescription className="my-4">Device: {selectedDevice}</CardDescription>
-                            </div>
-                            <div className="flex flex-col self-stretch h-full gap-3">
                                 <div className="flex items-end justify-end gap-3">
                                     {uniqueDays.map((day, index) => (
                                         <button type='button' className={`text-sm px-4 py-1 rounded-full ${selectedDay === day ? 'bg-primary-fg text-primary font-bold' : 'bg-gray-100 text-gray-400'}`} key={index} onClick={() => handleDaySelection(day)}>{day}</button>
                                     ))}
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between self-stretch h-full gap-3">
+                                <div className="flex items-center gap-4">
+                                    <p className="bg-green-200 text-green-600 font-bold px-5 py-1 rounded-full text-sm">Optimal</p>
+                                    <div className="flex items-center gap-2">
+                                        <TvMinimal size={20} className="text-gray-500" />
+                                        <CardDescription className="my-4">{selectedDevice}</CardDescription>
+                                    </div>
+                                    {/* <div className="flex items-center gap-2">
+                                            <MapPin size={20} className="text-gray-500"/>
+                                            <CardDescription className="my-4">{selectedDevice}</CardDescription>
+                                        </div> */}
                                 </div>
                                 <div className="flex items-center justify-end gap-3">
                                     <MyTooltip text="First" onClick={handleFirstPage} disabled={currentPage === 1}>
@@ -267,7 +277,7 @@ export default function DetailKolam() {
                                                         <div className="flex my-5 mx-6 gap-4 items-center">
                                                             <Droplet size={35} color={"gray"} />
                                                             <div>
-                                                                <h1 className="lg:text-lg 2xl:text-xl"><span className="font-bold text-primary">Nutrisi</span> <span className="text-gray-400 text-sm">(PPM)</span></h1>
+                                                                <h1 className="lg:text-lg 2xl:text-xl"><span className="font-bold text-primary">TDS</span> <span className="text-gray-400 text-sm">(PPM)</span></h1>
                                                                 <p className="text-gray-700">{minTds < 0 ? ("(-" + minTds + ")") : minTds} - {maxTds}</p>
                                                             </div>
                                                         </div>

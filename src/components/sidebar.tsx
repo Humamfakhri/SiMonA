@@ -3,15 +3,35 @@ import Link from "next/link";
 import Image from "next/image";
 import { AlignJustify, Bell, Calendar, ChevronLeft, ChevronRight, ChevronsRight, CircleHelp, HandCoins, LayoutDashboard, LogOut, Settings2, Sparkles } from "lucide-react";
 import { useState } from 'react';
+import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const [showSidebar, setShowSidebar] = useState(true);
+
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const handleLogout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await fetch("/api/logout", {
+      method: "POST",
+      // body: JSON.stringify({ username, password }),
+      // headers: { "Content-Type": "application/json" },
+    });
+
+    if (res.ok) {
+      router.push("/login");
+    } else {
+      const data = await res.json();
+      setError(data.error);
+    }
+  };
+
   return (
     <aside className={`relative z-10 transition-all duration-300 ${showSidebar ? "w-[264px]" : "w-[102px]"}`}>
       <div className="absolute top-12 right-0 translate-x-1/2">
-      <button className="bg-primary rounded-full p-[2px]" onClick={() => setShowSidebar(!showSidebar)}>
-        <ChevronRight strokeWidth={1.5} className={`text-white ${showSidebar && "rotate-180"}`}/>
-      </button>
+        <button className="bg-primary rounded-full p-[2px]" onClick={() => setShowSidebar(!showSidebar)}>
+          <ChevronRight strokeWidth={1.5} className={`text-white ${showSidebar && "rotate-180"}`} />
+        </button>
       </div>
       {/* w-48 2xl:w-56 */}
       <nav className="flex flex-col gap-8 px-5 py-7 h-full">
@@ -22,61 +42,71 @@ export default function Sidebar() {
           {/* {showSidebar ? "T" : "F"} */}
           <li className="w-full">
             <Link href="/" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} transition-all duration-300 whitespace-nowrap flex items-center gap-6 bg-primary px-5 py-3 rounded-sm text-sm text-white`}>
-              <LayoutDashboard size={20} strokeWidth={3} />
+              <LayoutDashboard size={20} strokeWidth={3} className="flex-shrink-0" />
               {showSidebar && (
-                <p>Beranda</p> 
+                <p>Beranda</p>
               )}
             </Link>
           </li>
           <li className="w-full">
-            <Link href="/prediksi" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
-              <Sparkles size={20} strokeWidth={2} />
+            <Link href="/ubah-data" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
+              <Settings2 size={20} strokeWidth={2} className="flex-shrink-0" />
               {showSidebar && (
-                <p>Prediksi</p> 
+                <p>Ubah Data</p>
               )}
             </Link>
           </li>
           <li className="w-full">
-            <Link href="/ubah-parameter" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
-              <Settings2 size={20} strokeWidth={2} />
+            <Link href="/analisis-prediksi" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
+              <Sparkles size={20} strokeWidth={2} className="flex-shrink-0" />
               {showSidebar && (
-                <p>Ubah Parameter</p> 
+                <p>Analisis & Prediksi</p>
               )}
             </Link>
           </li>
           <li className="w-full">
             <Link href="/notifikasi" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
-              <Bell size={20} strokeWidth={2} />
+              <Bell size={20} strokeWidth={2} className="flex-shrink-0" />
               {showSidebar && (
-                <p>Notifikasi</p> 
+                <p>Notifikasi</p>
               )}
             </Link>
           </li>
           <li className="w-full">
-            <Link href="/bantuan" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground transition-all duration-300 whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
-              <CircleHelp size={20} strokeWidth={2} />
+            <Link href="/panduan" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground transition-all duration-300 whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
+              <CircleHelp size={20} strokeWidth={2} className="flex-shrink-0" />
               {showSidebar && (
-                <p>Bantuan</p> 
+                <p>Panduan</p>
               )}
             </Link>
           </li>
         </ul>
         <div className="px-3">
-        {/* <div className={`${showSidebar && "px-4"}`}> */}
+          {/* <div className={`${showSidebar && "px-4"}`}> */}
           {showSidebar && (
             <div className="mb-4 border rounded-sm p-3">
               <p className="text-gray-500 text-sm mb-1 whitespace-nowrap">Anda masuk sebagai:</p>
               <p className="font-bold">Admin</p>
             </div>
           )}
-            <Link href={"#"} className="relative flex items-center gap-6 my-3 text-sm text-red-500 rounded slideBgButton before:bg-red-100">
+          <form onSubmit={handleLogout}>
+            <button type="submit" className="relative flex w-full items-center gap-6 my-3 text-sm text-red-500 rounded slideBgButton before:bg-red-100">
+              <div className="flexCenter bg-red-100 px-2 py-3 rounded">
+                <LogOut size={20} strokeWidth={2} className="rotate-180" />
+              </div>
+              {showSidebar && (
+                <span>Keluar</span>
+              )}
+            </button>
+          </form>
+          {/* <Link href={"/login"} className="relative flex items-center gap-6 my-3 text-sm text-red-500 rounded slideBgButton before:bg-red-100">
             <div className="flexCenter bg-red-100 px-2 py-3 rounded">
               <LogOut size={20} strokeWidth={2} className="rotate-180" />
             </div>
             {showSidebar && (
               <span>Keluar</span>
             )}
-          </Link>
+          </Link> */}
         </div>
       </nav>
     </aside>
