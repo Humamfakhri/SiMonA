@@ -3,13 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { AlignJustify, Bell, Calendar, ChevronLeft, ChevronRight, ChevronsRight, CircleHelp, HandCoins, LayoutDashboard, LogOut, Settings2, Sparkles } from "lucide-react";
 import { useState } from 'react';
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Sidebar() {
   const [showSidebar, setShowSidebar] = useState(true);
-
   const [error, setError] = useState("");
   const router = useRouter();
+  const pathname = usePathname();
+  
   const handleLogout = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await fetch("/api/logout", {
@@ -39,47 +40,28 @@ export default function Sidebar() {
           <Image src="/images/logo.png" alt="logo" width={62} height={62} />
         </div>
         <ul className="nav-links grow flex flex-col gap-5">
-          {/* {showSidebar ? "T" : "F"} */}
-          <li className="w-full">
-            <Link href="/" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} transition-all duration-300 whitespace-nowrap flex items-center gap-6 bg-primary px-5 py-3 rounded-sm text-sm text-white`}>
-              <LayoutDashboard size={20} strokeWidth={3} className="flex-shrink-0" />
-              {showSidebar && (
-                <p>Beranda</p>
-              )}
-            </Link>
-          </li>
-          <li className="w-full">
-            <Link href="/ubah-data" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
-              <Settings2 size={20} strokeWidth={2} className="flex-shrink-0" />
-              {showSidebar && (
-                <p>Ubah Data</p>
-              )}
-            </Link>
-          </li>
-          <li className="w-full">
-            <Link href="/analisis-prediksi" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
-              <Sparkles size={20} strokeWidth={2} className="flex-shrink-0" />
-              {showSidebar && (
-                <p>Analisis & Prediksi</p>
-              )}
-            </Link>
-          </li>
-          <li className="w-full">
-            <Link href="/notifikasi" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
-              <Bell size={20} strokeWidth={2} className="flex-shrink-0" />
-              {showSidebar && (
-                <p>Notifikasi</p>
-              )}
-            </Link>
-          </li>
-          <li className="w-full">
-            <Link href="/panduan" className={` ${showSidebar ? "w-48 2xl:w-56" : "w-full"} hover:bg-primary-foreground transition-all duration-300 whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm text-slate-600`}>
-              <CircleHelp size={20} strokeWidth={2} className="flex-shrink-0" />
-              {showSidebar && (
-                <p>Panduan</p>
-              )}
-            </Link>
-          </li>
+          {[
+            { href: "/", label: "Beranda", icon: LayoutDashboard },
+            { href: "/ubah-data", label: "Ubah Data", icon: Settings2 },
+            { href: "/analisis-prediksi", label: "Analisis & Prediksi", icon: Sparkles },
+            { href: "/notifikasi", label: "Notifikasi", icon: Bell },
+            { href: "/panduan", label: "Panduan", icon: CircleHelp },
+          ].map(({ href, label, icon: Icon }) => {
+            const isActive = pathname === href;
+            return (
+              <li key={href} className="w-full">
+          <Link
+            href={href}
+            className={`${
+              isActive ? "bg-primary text-white" : "hover:bg-primary-foreground text-slate-600"
+            } ${showSidebar ? "w-48 2xl:w-56" : "w-full"} transition-all duration-300 whitespace-nowrap flex items-center gap-6 px-5 py-3 rounded-sm text-sm`}
+          >
+            <Icon size={20} strokeWidth={isActive ? 3 : 2} className="flex-shrink-0" />
+            {showSidebar && <p>{label}</p>}
+          </Link>
+              </li>
+            );
+          })}
         </ul>
         <div className="px-3">
           {/* <div className={`${showSidebar && "px-4"}`}> */}
